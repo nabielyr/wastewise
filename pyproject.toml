@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wastewise"
+version = "0.1.0"
+description = "Demand forecasting and food waste simulation dashboard for food supply chains."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Muhammad Nabiel Yandra" }]
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "pandas>=2.1",
+    "numpy>=1.26",
+    "pyarrow>=14",
+    "scikit-learn>=1.4",
+    "lightgbm>=4.3",
+    "statsmodels>=0.14",
+    "shap>=0.45",
+    "plotly>=5.20",
+    "matplotlib>=3.8",
+    "seaborn>=0.13",
+    "streamlit>=1.35",
+    "kaggle>=1.6",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.6",
+    "pytest>=8.0",
+    "pre-commit>=3.7",
+]
+notebook = [
+    "jupyterlab>=4.1",
+    "ipykernel>=6.29",
+]
+
+[project.urls]
+Repository = "https://github.com/nabielyr/wastewise"
+
+[tool.setuptools.packages.find]
+where = ["src"]
