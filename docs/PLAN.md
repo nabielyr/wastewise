@@ -132,7 +132,7 @@ wastewise/
 
 ### Fase 1: Akuisisi & pemahaman data
 
-- [ ] **1.1** Tulis `src/wastewise/data/download.py` untuk download dataset via Kaggle API ke `data/raw/`, dengan pesan error jelas kalau token tidak ada. → `feat: add kaggle dataset download script`
+- [x] **1.1** Tulis `src/wastewise/data/download.py` untuk download dataset via Kaggle API ke `data/raw/`, dengan pesan error jelas kalau token tidak ada. → `feat: add kaggle dataset download script`
 - [ ] **1.2** Tambah target `make data` di Makefile. → `chore: add make target for data download`
 - [ ] **1.3** Tulis `src/wastewise/data/load.py`: fungsi load tiap CSV dengan dtype eksplisit. → `feat: add typed loaders for raw csv files`
 - [ ] **1.4** Tambah fungsi merge `train` + `center_info` + `meal_info` jadi satu dataframe. → `feat: add function to merge orders with center and meal info`
