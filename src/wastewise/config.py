@@ -18,7 +18,7 @@ DOCS_DIR = PROJECT_ROOT / "docs"
 
 # Dataset
 # Kaggle slug for the Food Demand Forecasting dataset (Genpact / Analytics Vidhya).
-# To be verified against the actual download in Phase 1.
+# Verified: public, downloadable anonymously (see docs/decisions.md D-005).
 KAGGLE_DATASET = "kannanaikkal/food-demand-forecasting"
 
 TRAIN_FILE = "train.csv"

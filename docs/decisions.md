@@ -43,3 +43,10 @@ so later phases (and the README) can point back here.
 - Decision: `docs/PLAN.md` was added in step 0.11, so steps 0.1 to 0.10 are ticked in that same commit.
 - Reason: The file did not exist earlier, so the "tick in the same commit" rule could only start from 0.11.
 - Alternatives considered: None.
+
+### D-005: Anonymous Kaggle download as fallback
+- Date: 2026-11-24
+- Phase / step: fix after 1.1
+- Decision: When no Kaggle credentials are configured, `download.py` downloads the dataset through `python -m kaggle` without logging in. Credentials are only required if that fails.
+- Reason: `kannanaikkal/food-demand-forecasting` is public (license DbCL-1.0) and the Kaggle CLI allows logged-out downloads. The Python library only permits anonymous access when it runs as the CLI, so the fallback shells out to it. Verified: the download produces `train.csv`, `fulfilment_center_info.csv`, `meal_info.csv`, `test.csv` (plus `sample_submission.csv`, unused).
+- Alternatives considered: Requiring a token for everyone (blocks reproducibility for no benefit on a public dataset).

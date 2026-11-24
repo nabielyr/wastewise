@@ -66,9 +66,41 @@ def test_missing_files_lists_absent_files(tmp_path):
     assert missing_files(tmp_path) == list(EXPECTED_FILES[1:])
 
 
-def test_download_without_credentials_raises_clear_error(no_credentials, tmp_path):
+def _failing_anonymous(dataset, dest, force):
+    raise KaggleCredentialsError("anonymous download failed, see kaggle.json setup")
+
+
+def test_download_without_credentials_falls_back_to_anonymous(no_credentials, tmp_path):
+    calls = []
+
+    def fake_anonymous(dataset, dest, force):
+        calls.append((dataset, force))
+        for name in EXPECTED_FILES:
+            (dest / name).write_text("x\n")
+
+    download_dataset(
+        dataset="owner/name",
+        dest=tmp_path,
+        api_factory=lambda: pytest.fail("API must not be used without credentials"),
+        anonymous_downloader=fake_anonymous,
+    )
+    assert calls == [("owner/name", False)]
+    assert missing_files(tmp_path) == []
+
+
+def test_download_raises_clear_error_when_anonymous_fails(no_credentials, tmp_path):
     with pytest.raises(KaggleCredentialsError, match="kaggle.json"):
-        download_dataset(dest=tmp_path / "raw", api_factory=lambda: pytest.fail("no API call"))
+        download_dataset(
+            dest=tmp_path / "raw",
+            api_factory=lambda: pytest.fail("no API call"),
+            anonymous_downloader=_failing_anonymous,
+        )
+
+
+def test_credentials_help_mentions_all_options(no_credentials):
+    text = download.credentials_help()
+    for needle in ("kaggle.json", "access_token", "KAGGLE_API_TOKEN", "KAGGLE_KEY"):
+        assert needle in text
 
 
 def test_download_skips_when_files_present(no_credentials, tmp_path):
@@ -92,6 +124,7 @@ def test_download_reports_unexpected_dataset_contents(monkeypatch, no_credential
         download_dataset(dest=tmp_path, api_factory=lambda: api)
 
 
-def test_main_returns_error_code_without_credentials(no_credentials, tmp_path, capsys):
+def test_main_returns_error_code_when_download_fails(monkeypatch, no_credentials, tmp_path, capsys):
+    monkeypatch.setattr(download, "_download_anonymously", _failing_anonymous)
     assert download.main(["--dest", str(tmp_path / "raw")]) == 1
-    assert "Kaggle credentials not found" in capsys.readouterr().err
+    assert "anonymous download failed" in capsys.readouterr().err
