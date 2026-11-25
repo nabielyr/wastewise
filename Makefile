@@ -9,7 +9,7 @@ else
 endif
 
 .DEFAULT_GOAL := help
-.PHONY: help venv install lint format test data
+.PHONY: help venv install lint format test data interim
 
 help:
 	@echo Targets:
@@ -17,7 +17,8 @@ help:
 	@echo   lint     run ruff lint and format check
 	@echo   format   auto-format and fix lint issues with ruff
 	@echo   test     run the test suite
-	@echo   data     download the raw Kaggle dataset into data/raw, needs Kaggle credentials
+	@echo   data     download the raw Kaggle dataset into data/raw
+	@echo   interim  merge raw files into data/interim/train_merged.parquet
 
 venv:
 	$(SYS_PY) -m venv .venv
@@ -40,3 +41,6 @@ test:
 
 data:
 	$(PY) -m wastewise.data.download
+
+interim: data
+	$(PY) -m wastewise.data.load

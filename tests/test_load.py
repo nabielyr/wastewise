@@ -11,12 +11,14 @@ from wastewise.data.load import (
     TEST_DTYPES,
     TRAIN_DTYPES,
     load_center_info,
+    load_interim_merged,
     load_meal_info,
     load_merged_train,
     load_test,
     load_train,
     merge_orders,
     read_csv_typed,
+    save_merged_train,
 )
 
 FIXTURE_RAW = Path(__file__).parent / "fixtures" / "raw"
@@ -98,3 +100,17 @@ def test_merge_rejects_duplicate_info_rows():
     meals = load_meal_info(FIXTURE_RAW)
     with pytest.raises(pd.errors.MergeError):
         merge_orders(orders, centers, pd.concat([meals, meals]))
+
+
+def test_save_merged_train_roundtrip(tmp_path):
+    out_path = save_merged_train(FIXTURE_RAW, tmp_path)
+    assert out_path.suffix == ".parquet"
+
+    original = load_merged_train(FIXTURE_RAW)
+    reloaded = load_interim_merged(tmp_path)
+    pd.testing.assert_frame_equal(reloaded, original)
+
+
+def test_load_interim_merged_missing_file_hint(tmp_path):
+    with pytest.raises(FileNotFoundError, match="make interim"):
+        load_interim_merged(tmp_path)

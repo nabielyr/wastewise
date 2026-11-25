@@ -26,6 +26,8 @@ TEST_FILE = "test.csv"
 CENTER_INFO_FILE = "fulfilment_center_info.csv"
 MEAL_INFO_FILE = "meal_info.csv"
 
+MERGED_TRAIN_FILE = "train_merged.parquet"
+
 TARGET_COL = "num_orders"
 SERIES_KEYS = ("center_id", "meal_id")
 TIME_COL = "week"

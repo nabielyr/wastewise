@@ -1,4 +1,8 @@
-"""Typed loaders for the raw Food Demand Forecasting CSV files."""
+"""Typed loaders for the raw Food Demand Forecasting CSV files.
+
+Running this module writes the merged train set to data/interim/:
+    python -m wastewise.data.load
+"""
 
 from __future__ import annotations
 
@@ -8,7 +12,9 @@ import pandas as pd
 
 from wastewise.config import (
     CENTER_INFO_FILE,
+    INTERIM_DATA_DIR,
     MEAL_INFO_FILE,
+    MERGED_TRAIN_FILE,
     RAW_DATA_DIR,
     TEST_FILE,
     TRAIN_FILE,
@@ -104,3 +110,25 @@ def merge_orders(
 def load_merged_train(raw_dir: Path = RAW_DATA_DIR) -> pd.DataFrame:
     """Load train orders merged with center and meal info."""
     return merge_orders(load_train(raw_dir), load_center_info(raw_dir), load_meal_info(raw_dir))
+
+
+def save_merged_train(raw_dir: Path = RAW_DATA_DIR, interim_dir: Path = INTERIM_DATA_DIR) -> Path:
+    """Merge the raw train data with center and meal info and write it as parquet."""
+    merged = load_merged_train(raw_dir)
+    out_path = Path(interim_dir) / MERGED_TRAIN_FILE
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    merged.to_parquet(out_path, index=False)
+    print(f"Wrote {len(merged):,} rows x {merged.shape[1]} columns to {out_path}")
+    return out_path
+
+
+def load_interim_merged(interim_dir: Path = INTERIM_DATA_DIR) -> pd.DataFrame:
+    """Read the merged train set written by ``save_merged_train``."""
+    path = Path(interim_dir) / MERGED_TRAIN_FILE
+    if not path.is_file():
+        raise FileNotFoundError(f"{path} not found. Run `make interim` first.")
+    return pd.read_parquet(path)
+
+
+if __name__ == "__main__":
+    save_merged_train()

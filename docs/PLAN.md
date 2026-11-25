@@ -138,7 +138,7 @@ wastewise/
 - [x] **1.4** Tambah fungsi merge `train` + `center_info` + `meal_info` jadi satu dataframe. → `feat: add function to merge orders with center and meal info`
 - [x] **1.5** Tulis test untuk loader dan merge (pakai fixture data mini buatan di `tests/fixtures/`, bukan data asli). → `test: add tests for loaders and merge`
 - [x] **1.6** Buat `docs/data_dictionary.md`: arti tiap kolom, tipe, satuan, dan catatan. → `docs: add data dictionary`
-- [ ] **1.7** Simpan data hasil merge ke `data/interim/` dalam format parquet. → `feat: persist merged dataset as parquet`
+- [x] **1.7** Simpan data hasil merge ke `data/interim/` dalam format parquet. → `feat: persist merged dataset as parquet`
 
 ### Fase 2: Exploratory Data Analysis
 
