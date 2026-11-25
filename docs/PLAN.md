@@ -144,7 +144,7 @@ wastewise/
 
 Buat `notebooks/01_eda.ipynb`. Setiap step menambah satu bagian ke notebook, lengkap dengan markdown penjelasan temuan.
 
-- [ ] **2.1** Ringkasan dataset: ukuran, rentang minggu, jumlah center, meal, dan kombinasi center-meal. → `docs(eda): add dataset overview section`
+- [x] **2.1** Ringkasan dataset: ukuran, rentang minggu, jumlah center, meal, dan kombinasi center-meal. → `docs(eda): add dataset overview section`
 - [ ] **2.2** Cek missing value, duplikat, dan nilai aneh (harga 0, order negatif atau ekstrem). → `docs(eda): add data quality checks`
 - [ ] **2.3** Distribusi `num_orders` (skewness, perlu transformasi log atau tidak). → `docs(eda): analyze target distribution`
 - [ ] **2.4** Tren total order per minggu dan pola musiman. → `docs(eda): add weekly demand trend analysis`
