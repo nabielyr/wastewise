@@ -80,3 +80,27 @@ def load_center_info(raw_dir: Path = RAW_DATA_DIR) -> pd.DataFrame:
 def load_meal_info(raw_dir: Path = RAW_DATA_DIR) -> pd.DataFrame:
     """Load meal attributes (category and cuisine)."""
     return read_csv_typed(Path(raw_dir) / MEAL_INFO_FILE, MEAL_INFO_DTYPES)
+
+
+def merge_orders(
+    orders: pd.DataFrame, center_info: pd.DataFrame, meal_info: pd.DataFrame
+) -> pd.DataFrame:
+    """Attach center and meal attributes to each order row.
+
+    Uses left joins validated as many-to-one, so the row count never changes, and raises
+    ValueError if any center_id or meal_id has no matching info row.
+    """
+    merged = orders.merge(center_info, on="center_id", how="left", validate="many_to_one")
+    merged = merged.merge(meal_info, on="meal_id", how="left", validate="many_to_one")
+
+    for key, info in (("center_id", center_info), ("meal_id", meal_info)):
+        unknown = sorted(set(orders[key]) - set(info[key]))
+        if unknown:
+            raise ValueError(f"{len(unknown)} {key} value(s) missing from info table: {unknown}")
+
+    return merged
+
+
+def load_merged_train(raw_dir: Path = RAW_DATA_DIR) -> pd.DataFrame:
+    """Load train orders merged with center and meal info."""
+    return merge_orders(load_train(raw_dir), load_center_info(raw_dir), load_meal_info(raw_dir))
